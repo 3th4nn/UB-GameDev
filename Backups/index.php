@@ -51,8 +51,8 @@
 <body>
     <h1>File Installer</h1>
     <p>Select the file you want to install:</p>
-    <form id="fileForm">
-        <select id="fileSelect">
+    <form id="fileForm" method="post">
+        <select id="fileSelect" name="selectedFile">
             <option value="">Select File...</option>
             <option value="backupabout.html">About</option>
             <option value="backupcontact.html">Contact</option>
@@ -60,22 +60,25 @@
             <option value="backupindex.html">Index</option>
             <option value="Backups.zip">All (Zip)</option>
         </select>
-        <button type="submit">Install</button>
+        <button type="submit" name="install">Install</button>
     </form>
-    
-    <script>
-        document.getElementById('fileForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
 
-            var selectedFile = document.getElementById('fileSelect').value;
-            if (selectedFile) {
-                // You can customize the installation process based on the selected file
-                // For demonstration purpose, I'm just alerting the selected file here
-                alert("Installing " + selectedFile + "...");
+    <?php
+    if (isset($_POST['install'])) {
+        $selectedFile = $_POST['selectedFile'];
+        if (!empty($selectedFile)) {
+            $source = $selectedFile;
+            $destination = "~/Downloads/" . basename($selectedFile);
+
+            if (copy($source, $destination)) {
+                echo "<p>File installed successfully.</p>";
             } else {
-                alert("Please select a file to install.");
+                echo "<p>Failed to install the file.</p>";
             }
-        });
-    </script>
+        } else {
+            echo "<p>Please select a file to install.</p>";
+        }
+    }
+    ?>
 </body>
 </html>
